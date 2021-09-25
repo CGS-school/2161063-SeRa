@@ -1,0 +1,18 @@
+// C++ code
+//
+
+void setup()
+{
+  pinMode(8, OUTPUT);
+}
+
+void loop()
+{
+  for (int K = 0; K <440; K++)
+  { digitalWrite(8, HIGH);
+    delayMicroseconds(1136);
+    digitalWrite(8, LOW);
+    delayMicroseconds(1136);
+  }
+  delay(1000);
+}
