@@ -1,0 +1,92 @@
+#include <Servo.h>
+
+#define PS A0
+#define SOUND 7
+#define SERVO_PIN 4
+
+Servo servo;
+
+void setup()
+{
+  
+  pinMode(SOUND, OUTPUT);
+  pinMode(SERVO_PIN, INPUT);
+  servo.attach(SERVO_PIN);
+  Serial.begin(9600);
+  
+}
+
+
+void turnSound(int);
+void count_time(int);
+
+
+void loop()
+{
+  
+  //서보가 수평일때 == 0, 차 가능
+  //서보가 수직일때 == 1, 차 불가능
+  int is_servo_on = 0;
+  
+  servo.write(90);
+  is_servo_on = 1;
+  count_time(is_servo_on);
+
+  servo.write(0);
+  is_servo_on = 0;
+  count_time(is_servo_on);
+  
+}
+
+
+void turnSound(int is_servo_on)
+{
+  
+  int value = analogRead(PS);
+  
+  value = map(value, 0, 159, 0, 255);
+  Serial.println(value);
+  
+
+  if(is_servo_on == 0 && value < 163 && 44 < value)
+  {
+    tone(SOUND, 523);
+  }
+  
+  else
+  {
+    noTone(SOUND);
+  }
+  
+}
+
+
+void count_time(int is_servo_on)
+{
+  
+  unsigned long cur_time = 0, old_time = 0;
+  unsigned long time_taken = 0;
+  
+  if(is_servo_on == 1)
+  {
+    while(time_taken < 2000)
+    {
+      old_time = millis();
+      turnSound(is_servo_on);
+      cur_time = millis();
+      time_taken += cur_time - old_time;
+    }
+  }
+  
+  else
+  {
+    while(time_taken < 5000)
+    {
+      old_time = millis();
+      turnSound(is_servo_on);
+      cur_time = millis();
+      time_taken += cur_time - old_time;
+    }
+  }
+  
+}
